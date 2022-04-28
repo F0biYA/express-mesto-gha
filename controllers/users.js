@@ -18,10 +18,9 @@ module.exports.getUserById = (req, res, next) => {
     .then((user) => {
       if (!user) {
         // throw new NotFoundError('Пользователь с таким id не найден');
-        res.status(404).send({ message: 'Пользователь с таким id не найден' });
-      } else {
-        res.status(200).send(user);
+        return res.status(404).send({ message: 'Пользователь с таким id не найден' });
       }
+      return res.send(user);// res.status(200).send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -61,7 +60,7 @@ module.exports.updateUser = (req, res, next) => {
       if (!user) {
         throw new NotFoundError('Пользователь с таким id не найден');
       } else {
-        res.status(200).send({ data: user });
+        return res.status(200).send({ data: user });
       }
     })
     .catch((err) => {
