@@ -15,13 +15,14 @@ module.exports.getUsers = (req, res, next) => {
 /* возвращает юзера по id (findById) */
 module.exports.getUserById = (req, res, next) => {
   User.findById(req.user._id)
-    .then((user) => {
-      if (!user) {
-        // throw new NotFoundError('Пользователь с таким id не найден');
-        return res.status(404).send({ message: 'Пользователь с таким id не найден' });
-      }
-      return res.status(200).send(user);
-    })
+    .orFail(() => next(new NotFoundError('Пользователь с таким id не найден')))
+    .then((data) => res.send({ data }))
+    //   if (!user) {
+    //     // throw new NotFoundError('Пользователь с таким id не найден');
+    //     return res.status(404).send({ message: 'Пользователь с таким id не найден' });
+    //   }
+    //   return res.status(200).send(user);
+    // })
     .catch((err) => {
       if (err.name === 'CastError') {
         return res
