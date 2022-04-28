@@ -25,12 +25,11 @@ module.exports.getUserById = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res
+        return res
           .status(400)
           .send({ message: 'Переданы неккоректные данные' });
-      } else {
-        next(err);
       }
+      return next(err);
     });
 };
 
