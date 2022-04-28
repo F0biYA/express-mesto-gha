@@ -17,14 +17,17 @@ module.exports.getUserById = (req, res, next) => {
   User.findById(req.user._id)
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('Пользователь с таким id не найден');
+        // throw new NotFoundError('Пользователь с таким id не найден');
+        res.status(404).send({ message: 'Пользователь с таким id не найден' });
       } else {
-        res.status(200).send({ data: user });
+        res.status(200).send(user);
       }
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError('Некорректные данные'));
+        res
+          .status(400)
+          .send({ message: 'Переданы неккоректные данные' });
       } else {
         next(err);
       }
