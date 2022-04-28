@@ -20,7 +20,7 @@ module.exports.getUserById = (req, res, next) => {
         // throw new NotFoundError('Пользователь с таким id не найден');
         return res.status(404).send({ message: 'Пользователь с таким id не найден' });
       }
-      return res.send(user);// res.status(200).send(user);
+      return res.status(200).send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
