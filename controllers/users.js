@@ -40,9 +40,9 @@ module.exports.createUser = (req, res, next) => {
     .then((user) => res.status(200).send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequestError('Некорректные данные'));
+        return next(new BadRequestError('Некорректные данные'));
       } else {
-        next(err);
+        return next(err);
       }
     });
 };
