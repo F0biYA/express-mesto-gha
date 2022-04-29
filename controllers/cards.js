@@ -13,17 +13,31 @@ module.exports.getCards = (req, res, next) => {
 };
 
 /* созать карточку (имя, ссылка, владелец-id) */
-module.exports.createCard = (req, res, next) => {
+module.exports.createCard = (req, res) => {
   const { name, link } = req.body;
-  Card.create({ name, link, owner: req.user._id })
-    .then((card) => res.send({ data: card }))
+  const owner = req.user._id;
+  Card.create({ name, link, owner })
+    .then((card) => res.send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequestError('Переданы некорректные данные'));
+        return res
+          .status(400)
+          .send({ message: 'Переданы некорректные данные' });
       }
-      next(err);
+      return res.status(500).send({ message: err.message });
     });
 };
+// module.exports.createCard = (req, res, next) => {
+//   const { name, link } = req.body;
+//   Card.create({ name, link, owner: req.user._id })
+//     .then((card) => res.send({ data: card }))
+//     .catch((err) => {
+//       if (err.name === 'ValidationError') {
+//         next(new BadRequestError('Переданы некорректные данные'));
+//       }
+//       next(err);
+//     });
+// };
 /* удалить карточку  */
 module.exports.deleteCard = (req, res, next) => {
   Card.findByIdAndRemove(req.params.cardId)
