@@ -30,9 +30,13 @@ mongoose.connect('mongodb://localhost:27017/mestodb');
 app.use('/users', userRouter);
 app.use('/cards', cardRouter);
 
-app.use('*', () => {
-  throw new NotFoundError('Страница не найдена');
+app.all('*', (req, res) => {
+  res.status(404).send({ message: 'Путь не найден' });
 });
+
+// app.use('*', () => {
+//   throw new NotFoundError('Страница не найдена');
+// });
 
 // app.use(serverError);
 

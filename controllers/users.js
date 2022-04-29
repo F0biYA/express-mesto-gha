@@ -6,32 +6,50 @@ const NotFoundError = require('../errors/notFoundError');
 const BadRequestError = require('../errors/badRequestError');
 
 /* возвращаерт всех юзеров (find) */
-module.exports.getUsers = (req, res, next) => {
+module.exports.getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send({ data: users }))
-    .catch(next);
+    .catch((err) => res.status(500).send({ message: err.message }));
+  // .catch(next);
 };
 
 /* возвращает юзера по id (findById) */
-module.exports.getUserById = (req, res, next) => {
+module.exports.getUserById = (req, res) => {
   User.findById(req.user._id)
-    .orFail(() => next(new NotFoundError('Пользователь с таким id не найден')))
-    .then((data) => res.send({ data }))
-    //   if (!user) {
-    //     // throw new NotFoundError('Пользователь с таким id не найден');
-    //     return res.status(404).send({ message: 'Пользователь с таким id не найден' });
-    //   }
-    //   return res.status(200).send(user);
-    // })
+    .then((user) => {
+      if (!user) {
+        return res.status(404).send({ message: 'Пользователь не найден' });
+      }
+      return res.send(user);
+    })
     .catch((err) => {
       if (err.name === 'CastError') {
         return res
           .status(400)
           .send({ message: 'Переданы неккоректные данные' });
       }
-      return next(err);
+      return res.status(500).send({ message: err.message });
     });
 };
+// module.exports.getUserById = (req, res, next) => {
+//   User.findById(req.user._id)
+//     .orFail(() => next(new NotFoundError('Пользователь с таким id не найден')))
+//     .then((data) => res.send({ data }))
+//     //   if (!user) {
+//     //     // throw new NotFoundError('Пользователь с таким id не найден');
+//     //     return res.status(404).send({ message: 'Пользователь с таким id не найден' });
+//     //   }
+//     //   return res.status(200).send(user);
+//     // })
+//     .catch((err) => {
+//       if (err.name === 'CastError') {
+//         return res
+//           .status(400)
+//           .send({ message: 'Переданы неккоректные данные' });
+//       }
+//       return next(err);
+//     });
+// };
 
 /* создать (create) нового юзера (имя, описание, аватар) */
 module.exports.createUser = (req, res, next) => {
