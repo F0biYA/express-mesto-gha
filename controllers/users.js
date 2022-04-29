@@ -52,17 +52,30 @@ module.exports.getUserById = (req, res) => {
 // };
 
 /* создать (create) нового юзера (имя, описание, аватар) */
-module.exports.createUser = (req, res, next) => {
+module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
   User.create({ name, about, avatar })
-    .then((user) => res.status(200).send({ data: user }))
+    .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return next(new BadRequestError('Некорректные данные'));
+        return res
+          .status(400)
+          .send({ message: 'Переданы некорректные данные' });
       }
-      return next(err);
+      return res.status(500).send({ message: err.message });
     });
 };
+// module.exports.createUser = (req, res, next) => {
+//   const { name, about, avatar } = req.body;
+//   User.create({ name, about, avatar })
+//     .then((user) => res.status(200).send({ data: user }))
+//     .catch((err) => {
+//       if (err.name === 'ValidationError') {
+//         return next(new BadRequestError('Некорректные данные'));
+//       }
+//       return next(err);
+//     });
+// };
 /* обновить профиль юзера (имя., описание ) */
 module.exports.updateUser = (req, res, next) => {
   const { name, about } = req.body;
