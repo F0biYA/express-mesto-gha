@@ -59,7 +59,7 @@ module.exports.deleteCard = (req, res, next) => {
     });
 };
 /* лайкнуть карточку  */
-module.exports.likeCard = (req, res, next) => {
+module.exports.likeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
@@ -67,18 +67,41 @@ module.exports.likeCard = (req, res, next) => {
   )
     .then((card) => {
       if (!card) {
-        next(new NotFoundError('Карточка не найдена'));
-      } else {
-        res.status(200).send({ data: card });
+        return res
+          .status(404)
+          .send({ message: 'Карточки с таким ID не существует' });
       }
+      return res.send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError('Некорректные данные'));
+        return res.status(400).send({
+          message: 'Переданы неккоретные данные',
+        });
       }
-      next(err);
+      return res.status(500).send({ message: err.message });
     });
 };
+// module.exports.likeCard = (req, res, next) => {
+//   Card.findByIdAndUpdate(
+//     req.params.cardId,
+//     { $addToSet: { likes: req.user._id } },
+//     { new: true },
+//   )
+//     .then((card) => {
+//       if (!card) {
+//         next(new NotFoundError('Карточка не найдена'));
+//       } else {
+//         res.status(200).send({ data: card });
+//       }
+//     })
+//     .catch((err) => {
+//       if (err.name === 'CastError') {
+//         next(new BadRequestError('Некорректные данные'));
+//       }
+//       next(err);
+//     });
+// };
 
 /* дизлайкнуть карточку */
 module.exports.dislikeCard = (req, res, next) => {
