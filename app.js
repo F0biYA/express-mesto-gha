@@ -2,7 +2,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 // const NotFoundError = require('./errors/notFoundError');
-// const serverError = require('./errors/serverError');
 
 const app = express();
 
@@ -30,6 +29,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb');
 app.use('/users', userRouter);
 app.use('/cards', cardRouter);
 
+/* ошибка при не найденной странице */
 app.all('*', (req, res) => {
   res.status(404).send({ message: 'Путь не найден' });
 });
@@ -37,8 +37,6 @@ app.all('*', (req, res) => {
 // app.use('*', () => {
 //   throw new NotFoundError('Страница не найдена');
 // });
-
-// app.use(serverError);
 
 app.listen(PORT, () => {
   // Если всё работает, консоль покажет, какой порт приложение слушает
