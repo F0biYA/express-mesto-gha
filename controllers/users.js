@@ -77,31 +77,44 @@ module.exports.createUser = (req, res) => {
 //     });
 // };
 /* обновить профиль юзера (имя., описание ) */
-module.exports.updateUser = (req, res, next) => {
+module.exports.updateUser = (req, res) => {
   const { name, about } = req.body;
-  User.findByIdAndUpdate(
-    req.user._id,
-    { name, about },
-    {
-      new: true,
-      runValidators: true,
-    },
-  )
-    .then((user) => {
-      if (!user) {
-        throw new NotFoundError('Пользователь с таким id не найден');
-      } else {
-        return res.status(200).send({ data: user });
-      }
-    })
+  User.findByIdAndUpdate(req.user._id, { name, about }, { runValidators: true })
+    .then((user) => res.send({ _id: user._id, name, about }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequestError('Некорректные данные'));
-      } else {
-        next(err);
+        return res
+          .status(400)
+          .send({ message: 'Переданы некорректные данные' });
       }
+      return res.status(500).send({ message: err.message });
     });
 };
+// module.exports.updateUser = (req, res, next) => {
+//   const { name, about } = req.body;
+//   User.findByIdAndUpdate(
+//     req.user._id,
+//     { name, about },
+//     {
+//       new: true,
+//       runValidators: true,
+//     },
+//   )
+//     .then((user) => {
+//       if (!user) {
+//         throw new NotFoundError('Пользователь с таким id не найден');
+//       } else {
+//         return res.status(200).send({ data: user });
+//       }
+//     })
+//     .catch((err) => {
+//       if (err.name === 'ValidationError') {
+//         next(new BadRequestError('Некорректные данные'));
+//       } else {
+//         next(err);
+//       }
+//     });
+// };
 
 /* обноввить аватар юзера ( аватар) */
 module.exports.updateAvatar = (req, res, next) => {
