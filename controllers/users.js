@@ -3,8 +3,8 @@ const User = require('../models/user');
 
 /* импортируем классы ошибок */
 /* не работают в тестах 13-ого спринта */
-const NotFoundError = require('../errors/notFoundError');
-const BadRequestError = require('../errors/badRequestError');
+// const NotFoundError = require('../errors/notFoundError');
+// const BadRequestError = require('../errors/badRequestError');
 
 /* возвращаерт всех юзеров (find) */
 module.exports.getUsers = (req, res) => {
@@ -57,7 +57,7 @@ module.exports.updateUser = (req, res) => {
 };
 
 /* обноввить аватар юзера ( аватар) */
-module.exports.updateAvatar = (req, res, next) => {
+module.exports.updateAvatar = (req, res) => {
   const { avatar } = req.body;
   User.findByIdAndUpdate(
     req.user._id,
@@ -69,15 +69,14 @@ module.exports.updateAvatar = (req, res, next) => {
   )
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('Пользователь с таким id не найден');
-      } else {
-        res.status(200).send({ data: user });
+        return res.status(404).send({ message: 'Карточки с таким id не существует' });
       }
+      return res.status(200).send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequestError('Некорректные данные'));
+        res.status(400).send({ message: 'Некорректные данные' });
       }
-      next(err);
+      return res.status(500).send({ message: err.message });
     });
 };
