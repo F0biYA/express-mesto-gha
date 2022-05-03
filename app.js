@@ -18,14 +18,6 @@ const { createUser, loginUser } = require('./controllers/users');
 /* импорт мидлвера авторизации */
 const auth = require('./middlewares/auth');
 
-// // мидлвэр временного решения авторизации
-// app.use((req, res, next) => {
-//   req.user = {
-//     _id: '626a6fad8e17c918e79f016c', //  _id созданного тестового пользователя
-//   };
-//   next();
-// });
-
 /* импорт  роутеров */
 const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');

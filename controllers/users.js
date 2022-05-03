@@ -122,7 +122,8 @@ module.exports.updateAvatar = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Некорректные данные'));
+      } else {
+        next(err);
       }
-      return res.status(500).send({ message: err.message });
     });
 };
