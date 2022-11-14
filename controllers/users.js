@@ -7,6 +7,7 @@ const User = require('../models/user');
 const NotFoundError = require('../errors/notFoundError');
 const BadRequestError = require('../errors/badRequestError');
 const ConflictError = require('../errors/conflictError');
+// eslint-disable-next-line no-unused-vars
 const UnauthorizedError = require('../errors/unauthorizedError');
 const ServerError = require('../middlewares/handleError');
 
@@ -84,15 +85,16 @@ module.exports.loginUser = (req, res, next) => {
       const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
       res.send({ token });
     })
-    // .catch(() => {
-    //   next(new UnauthorizedError('Неправильный Email или пароль'));
+    .catch(() => {
+      next(new UnauthorizedError('Неправильный Email или пароль'));
+    });
+    // .catch((err) => {
+    //   if (err.name === 'UnauthorizedError') {
+    //     next(err);
+    //   } else {
+    //     next(new ServerError('Произошла внутренняя ошибка сервера'));
+    //   }
     // });
-    .catch((err) => {
-      if (err.name === 'UnauthorizedError') {
-        next(err);
-      } else {
-        next(new ServerError('Произошла внутренняя ошибка сервера'));
-      }})
 };
 
 /* обновить профиль юзера (имя., описание ) */
