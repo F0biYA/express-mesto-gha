@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 /* импорт модели юзера */
@@ -88,13 +89,13 @@ module.exports.loginUser = (req, res, next) => {
     .catch(() => {
       next(new UnauthorizedError('Неправильный Email или пароль'));
     });
-    // .catch((err) => {
-    //   if (err.name === 'UnauthorizedError') {
-    //     next(err);
-    //   } else {
-    //     next(new ServerError('Произошла внутренняя ошибка сервера'));
-    //   }
-    // });
+  // .catch((err) => {
+  //   if (err.name === 'UnauthorizedError') {
+  //     next(err);
+  //   } else {
+  //     next(new ServerError('Произошла внутренняя ошибка сервера'));
+  //   }
+  // });
 };
 
 /* обновить профиль юзера (имя., описание ) */
