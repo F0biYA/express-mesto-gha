@@ -35,6 +35,4 @@ router.patch('/me/avatar', celebrate({
   }),
 }), updateAvatar);
 
-// module.exports = router;
-// module.exports = router;
 module.exports = router;
