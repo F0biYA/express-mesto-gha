@@ -86,16 +86,16 @@ module.exports.loginUser = (req, res, next) => {
       const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
       res.send({ token });
     })
-    // .catch(() => {
-    //   next(new UnauthorizedError('Неправильный Email или пароль'));
-    // });
-    .catch((err) => {
-      if (err.name === 'UnauthorizedError' || err.name === 'ValidationError') {
-        next(new UnauthorizedError('Неправильные почта или пароль'));
-      } else {
-        next(new ServerError('Произошла внутренняя ошибка сервера'));
-      }
+    .catch(() => {
+      next(new UnauthorizedError('Неправильный Email или пароль'));
     });
+  // .catch((err) => {
+  //   if (err.name === 'CastError' || err.name === 'ValidationError') {
+  //     next(new UnauthorizedError('Неправильные почта или пароль'));
+  //   } else {
+  //     next(new ServerError('Произошла внутренняя ошибка сервера'));
+  //   }
+  // });
 };
 
 /* обновить профиль юзера (имя., описание ) */
