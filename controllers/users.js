@@ -8,6 +8,7 @@ const NotFoundError = require('../errors/notFoundError');
 const BadRequestError = require('../errors/badRequestError');
 const ConflictError = require('../errors/conflictError');
 const UnauthorizedError = require('../errors/unauthorizedError');
+const ServerError = require('../middlewares/handleError');
 
 /* возвращаерт всех юзеров (find) */
 module.exports.getUsers = (req, res, next) => {
@@ -83,9 +84,15 @@ module.exports.loginUser = (req, res, next) => {
       const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
       res.send({ token });
     })
-    .catch(() => {
-      next(new UnauthorizedError('Неправильный Email или пароль'));
-    });
+    // .catch(() => {
+    //   next(new UnauthorizedError('Неправильный Email или пароль'));
+    // });
+    .catch((err) => {
+      if (err.name === 'UnauthorizedError') {
+        next(err);
+      } else {
+        next(new ServerError('Произошла внутренняя ошибка сервера'));
+      }})
 };
 
 /* обновить профиль юзера (имя., описание ) */
