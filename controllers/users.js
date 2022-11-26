@@ -62,12 +62,11 @@ module.exports.createUser = (req, res, next) => {
     .then((hash) => User.create({
       name, about, avatar, email, password: hash,
     }))
-    // .then(() => res.send({
-    //   data: {
-    //     name, about, avatar, email,
-    //   },
-    // eslint-disable-next-line no-param-reassign
-    .then((user) => { console.log(user); res.send(user); })
+    .then(() => res.send({
+      data: {
+        name, about, avatar, email,
+      },
+    }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные при создании пользователя'));
