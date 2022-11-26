@@ -67,7 +67,7 @@ module.exports.createUser = (req, res, next) => {
     //     name, about, avatar, email,
     //   },
   // eslint-disable-next-line no-param-reassign
-    .then((data) => { res.send(200, delete data.password); })
+    .then((data) => { res.send(delete data.password); })
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные при создании пользователя'));
